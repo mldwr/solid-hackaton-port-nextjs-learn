@@ -1,0 +1,8 @@
+/* src/styles/fonts.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lusitana:wght@400;700&display=swap');
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-lusitana: 'Lusitana', serif;
+}
