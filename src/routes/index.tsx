@@ -8,7 +8,7 @@ import '../styles/fonts.css';
 const Page: Component = () => {
   return (
     <main class="flex min-h-screen flex-col p-6">
-      <div class="flex h-20 shrink-0 items-end rounded-lg bg-blue-600 p-4 md:h-52">
+      <div class="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
         <AcmeLogo />
       </div>
       <div class="mt-4 flex grow flex-col gap-4 md:flex-row">
