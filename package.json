@@ -3,9 +3,9 @@
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
+    "prebuild": "npm install --legacy-peer-deps",
     "build": "vinxi build",
-    "start": "vinxi start",
-    "install": "npm install --legacy-peer-deps"
+    "start": "vinxi start"
   },
   "dependencies": { 
     "@auth/core": "^0.37.2",
