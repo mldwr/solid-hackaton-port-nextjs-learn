@@ -7,6 +7,8 @@
     "start": "vinxi start"
   },
   "dependencies": {
+    "@auth/core": "^0.37.2",
+    "@auth/solid-start": "^0.15.2",
     "@fontsource/inter": "^5.1.0",
     "@fontsource/lusitana": "^5.1.0",
     "@solid-primitives/scheduled": "^1.4.4",

@@ -1,10 +1,9 @@
-// server/actions.ts
+'use server';
+
 import { z } from 'zod';
 import { sql } from '@vercel/postgres';
-import { createHandler } from '@solidjs/router';
-import type { APIEvent } from 'solid-start';
-import { redirect } from 'solid-start/server';
-import { authenticateUser } from './auth'; // You'll need to implement this
+import { redirect } from '@solidjs/router';
+import { AuthError } from '@auth/core/errors';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -32,17 +31,13 @@ export type State = {
   message?: string | null;
 };
 
-export const createInvoiceAction = async (event: APIEvent) => {
-  const formData = await event.request.formData();
-  
-  // Validate form fields using Zod
+export const createInvoice = async (formData: FormData) => {
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
     status: formData.get('status'),
   });
 
-  // If form validation fails, return errors early
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
@@ -50,7 +45,6 @@ export const createInvoiceAction = async (event: APIEvent) => {
     };
   }
 
-  // Prepare data for insertion into the database
   const { customerId, amount, status } = validatedFields.data;
   const amountInCents = amount * 100;
   const date = new Date().toISOString().split('T')[0];
@@ -60,21 +54,16 @@ export const createInvoiceAction = async (event: APIEvent) => {
       INSERT INTO invoices (customer_id, amount, status, date)
       VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
     `;
-    
-    // In SolidStart, we use the redirect utility
-    throw redirect('/dashboard/invoices');
   } catch (error) {
-    if (error instanceof Error && 'location' in error) throw error; // Rethrow redirect
     return {
       message: 'Database Error: Failed to Create Invoice.',
     };
   }
+
+  throw redirect('/dashboard/invoices');
 };
 
-export const updateInvoiceAction = async (event: APIEvent) => {
-  const formData = await event.request.formData();
-  const id = formData.get('id') as string;
-  
+export const updateInvoice = async (id: string, formData: FormData) => {
   const validatedFields = UpdateInvoice.safeParse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
@@ -97,55 +86,34 @@ export const updateInvoiceAction = async (event: APIEvent) => {
       SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
       WHERE id = ${id}
     `;
-    
-    throw redirect('/dashboard/invoices');
   } catch (error) {
-    if (error instanceof Error && 'location' in error) throw error;
     return { message: 'Database Error: Failed to Update Invoice.' };
   }
+
+  throw redirect('/dashboard/invoices');
 };
 
-export const deleteInvoiceAction = async (event: APIEvent) => {
-  const formData = await event.request.formData();
-  const id = formData.get('id') as string;
-
+export const deleteInvoice = async (id: string) => {
   try {
     await sql`DELETE FROM invoices WHERE id = ${id}`;
-    throw redirect('/dashboard/invoices');
+    return { message: 'Deleted Invoice' };
   } catch (error) {
-    if (error instanceof Error && 'location' in error) throw error;
     return { message: 'Database Error: Failed to Delete Invoice.' };
   }
 };
 
-export const authenticateAction = async (event: APIEvent) => {
-  const formData = await event.request.formData();
-  
+export const authenticate = async (formData: FormData) => {
   try {
-    const result = await authenticateUser(formData);
-    if (!result.success) {
-      return 'Invalid credentials.';
-    }
     throw redirect('/dashboard');
   } catch (error) {
-    if (error instanceof Error && 'location' in error) throw error;
-    return 'Something went wrong.';
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+    throw error;
   }
 };
-
-// Create API routes for each action
-export const createInvoiceHandler = createHandler(async (event) => {
-  return await createInvoiceAction(event);
-});
-
-export const updateInvoiceHandler = createHandler(async (event) => {
-  return await updateInvoiceAction(event);
-});
-
-export const deleteInvoiceHandler = createHandler(async (event) => {
-  return await deleteInvoiceAction(event);
-});
-
-export const authenticateHandler = createHandler(async (event) => {
-  return await authenticateAction(event);
-});

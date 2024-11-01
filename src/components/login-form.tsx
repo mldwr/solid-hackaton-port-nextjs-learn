@@ -1,12 +1,38 @@
 import '../styles/fonts.css';
-import { VsArrowRight } from 'solid-icons/vs'
+import { VsArrowRight, VsKey } from 'solid-icons/vs'
 import { Button } from '~/components/button';
 import { HiSolidAtSymbol } from 'solid-icons/hi'
-import { VsKey } from 'solid-icons/vs'
+import { BsExclamationCircle } from 'solid-icons/bs'
+import { Show } from 'solid-js';
+import { authenticate } from '~/lib/actions';
+import { createSignal } from "solid-js";
+
 
 export default function LoginForm() {
+  const [errorMessage, setErrorMessage] = createSignal<string | null>(null);
+  const [isPending, setIsPending] = createSignal<boolean>(false);
+
+  async function handleFormSubmit(event: Event): Promise<void> {
+    event.preventDefault();
+    setIsPending(true);
+
+    const formData = new FormData(event.target as HTMLFormElement);
+
+    try {
+      const result = await authenticate(formData); // Pass formData to authenticate
+      if (typeof result === "string") {
+        setErrorMessage(result); // Set error message if authenticate returns a string
+      } else {
+        setErrorMessage(null); // Clear error if authentication is successful
+      }
+    } catch (error) {
+      setErrorMessage("An unexpected error occurred.");
+    } finally {
+      setIsPending(false);
+    }
+  }
   return (
-    <form class="space-y-3">
+    <form onSubmit={handleFormSubmit} class="space-y-3">
       <div class="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
         <h1 class={`font-lusitana mb-3 text-2xl`}>
           Please log in to continue.
@@ -52,10 +78,18 @@ export default function LoginForm() {
             </div>
           </div>
         </div>
-        <Button class="mt-4 w-full">
+        <Button class="mt-4 w-full" aria-disabled={isPending()}>
           Log in <VsArrowRight class="ml-auto h-5 w-5 text-gray-50" />
         </Button>
-        <div class="flex h-8 items-end space-x-1">
+        <div
+          class="flex h-8 items-end space-x-1"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <Show when={errorMessage()}>
+              <BsExclamationCircle class="h-5 w-5 text-red-500" />
+              <p class="text-sm text-red-500">{errorMessage()}</p>
+          </Show>
         </div>
       </div>
     </form>

@@ -1,6 +1,6 @@
 // src/components/acme-logo.tsx
 import { Component } from 'solid-js';
-//https://solid-icons.vercel.app/search/globe
+//https://solid-icons.vercel.app/
 import { VsGlobe } from 'solid-icons/vs'
 import '../styles/fonts.css';
 
