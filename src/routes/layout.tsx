@@ -5,7 +5,7 @@ import { JSX } from 'solid-js';
 export const routeData = () => {
   return {
     title: 'Acme Dashboard',
-    description: 'The Dashboard built with SolidStart'
+    description: 'The Dashboard ported to SolidStart from Next.js'
   };
 };
 
