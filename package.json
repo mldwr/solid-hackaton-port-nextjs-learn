@@ -7,7 +7,7 @@
     "start": "vinxi start",
     "install": "npm install --legacy-peer-deps"
   },
-  "dependencies": {
+  "dependencies": { 
     "@auth/core": "^0.37.2",
     "@auth/solid-start": "^0.15.2",
     "@fontsource/inter": "^5.1.0",
