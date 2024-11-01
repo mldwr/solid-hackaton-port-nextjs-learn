@@ -1,25 +1,18 @@
-import { fetchFilteredCustomers } from '@/app/lib/data';
-import CustomersTable from '@/app/ui/customers/table';
-import { Metadata } from 'next';
+import { createResource } from 'solid-js';
+import { fetchFilteredCustomers } from '~/lib/data';
+import CustomersTable from '~/components/customers/table';
+import { useSearchParams } from '@solidjs/router';
 
-export const metadata: Metadata = {
-  title: 'Customers',
-};
-
-export default async function Page(props: {
-  searchParams?: Promise<{
-    query?: string;
-    page?: string;
-  }>;
-}) {
-  const searchParams = await props.searchParams;
-  const query = searchParams?.query || '';
-
-  const customers = await fetchFilteredCustomers(query);
+export default function CustomersPage() {
+  const [searchParams] = useSearchParams();
+  
+  const [customers] = createResource(() => 
+    fetchFilteredCustomers(Array.isArray(searchParams.query) ? searchParams.query[0] : searchParams.query || '')
+  );
 
   return (
     <main>
-      <CustomersTable customers={customers} />
+      <CustomersTable customers={customers() ?? []} />
     </main>
   );
 }

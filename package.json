@@ -3,12 +3,10 @@
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
-    "prebuild": "npm install --legacy-peer-deps",
-    "install": "npm install --legacy-peer-deps",
     "build": "vinxi build",
     "start": "vinxi start"
   },
-  "dependencies": { 
+  "dependencies": {
     "@auth/core": "^0.37.2",
     "@auth/solid-start": "^0.15.2",
     "@fontsource/inter": "^5.1.0",
@@ -16,8 +14,10 @@
     "@solid-primitives/scheduled": "^1.4.4",
     "@solidjs/router": "^0.14.10",
     "@solidjs/start": "^1.0.9",
+    "@types/bcrypt": "^5.0.2",
     "@vercel/postgres": "^0.10.0",
     "autoprefixer": "^10.4.19",
+    "bcrypt": "^5.1.1",
     "clsx": "^2.1.1",
     "postcss": "^8.4.38",
     "solid-icons": "^1.1.0",

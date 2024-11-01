@@ -1,4 +1,4 @@
-import '@/app/ui/global.css';
+//import '@/app/ui/global.css';
 import '~/styles/fonts.css';
 import { JSX } from 'solid-js';
 
