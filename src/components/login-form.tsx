@@ -6,11 +6,13 @@ import { BsExclamationCircle } from 'solid-icons/bs'
 import { Show } from 'solid-js';
 import { authenticate } from '~/lib/actions';
 import { createSignal } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 
 
 export default function LoginForm() {
   const [errorMessage, setErrorMessage] = createSignal<string | null>(null);
   const [isPending, setIsPending] = createSignal<boolean>(false);
+  const navigate = useNavigate();
 
   async function handleFormSubmit(event: Event): Promise<void> {
     event.preventDefault();
@@ -19,14 +21,20 @@ export default function LoginForm() {
     const formData = new FormData(event.target as HTMLFormElement);
 
     try {
-      const result = await authenticate(formData); // Pass formData to authenticate
-      if (typeof result === "string") {
+      const email = formData.get('email') as string;
+      const password = formData.get('password') as string;
+      console.log(`xxxx ${email}:${password}:${formData}`);
+      const result = await authenticate(`${email}:${password}`, formData);
+      
+      if (result instanceof Response) {
+        navigate('/dashboard');
+      } else if (typeof result === "string") {
         setErrorMessage(result); // Set error message if authenticate returns a string
       } else {
-        setErrorMessage(null); // Clear error if authentication is successful
+        setErrorMessage("Invalid credentials. Please try again.");
       }
     } catch (error) {
-      setErrorMessage("An unexpected error occurred.");
+      setErrorMessage(`An unexpected error occurred: ${error}`);
     } finally {
       setIsPending(false);
     }

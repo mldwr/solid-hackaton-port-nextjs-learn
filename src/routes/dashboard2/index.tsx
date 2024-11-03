@@ -1,4 +1,3 @@
-// This is the dashboard home page
 import { Suspense } from 'solid-js';
 import CardWrapper from '~/components/dashboard/cards';
 import RevenueChart from '~/components/dashboard/revenue-chart';
@@ -6,7 +5,7 @@ import LatestInvoices from '~/components/dashboard/latest-invoices';
 import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '~/components/skeletons';
 
 export default function DashboardPage() {
-  console.log("Dashboard index rendering");
+    console.log("Dashboard index rendering2");
   return (
     <main>
       <h1 class="font-lusitana mb-4 text-xl md:text-2xl">
@@ -27,4 +26,4 @@ export default function DashboardPage() {
       </div>
     </main>
   );
-} 
+}

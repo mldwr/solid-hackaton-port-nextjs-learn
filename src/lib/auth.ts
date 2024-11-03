@@ -28,6 +28,7 @@ export async function signIn(credentials: { email: string; password: string }) {
       const { email, password } = parsedCredentials.data;
 
       const foundUser = await getUser(email);
+      
       if (!foundUser) return null;
 
       const passwordsMatch = await bcrypt.compare(password, foundUser.password);

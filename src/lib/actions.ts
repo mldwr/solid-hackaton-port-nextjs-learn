@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { redirect } from '@solidjs/router';
 import { AuthError } from '@auth/core/errors';
+import { signIn } from '~/lib/auth';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -102,9 +103,23 @@ export const deleteInvoice = async (id: string) => {
   }
 };
 
-export const authenticate = async (formData: FormData) => {
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData,
+) {
   try {
-    throw redirect('/dashboard');
+    const result = await signIn({
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
+    });
+    
+    if (result) {
+      return new Response(null, {
+        status: 302,
+        headers: { Location: '/dashboard' },
+      });
+    }
+    return 'Invalid credentials.';
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -116,4 +131,4 @@ export const authenticate = async (formData: FormData) => {
     }
     throw error;
   }
-};
+}
