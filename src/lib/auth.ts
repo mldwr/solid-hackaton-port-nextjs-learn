@@ -48,9 +48,15 @@ export async function signIn(credentials: { email: string; password: string }) {
   }
 }
 
-export function signOut() {
-  setUser(null);
-  setIsAuthenticated(false);
+export async function signOut() {
+  try {
+    setUser(null);
+    setIsAuthenticated(false);
+    return true;
+  } catch (error) {
+    console.error('Error during sign out:', error);
+    return false;
+  }
 }
 
 export const auth = {

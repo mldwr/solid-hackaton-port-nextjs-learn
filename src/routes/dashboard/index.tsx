@@ -6,7 +6,6 @@ import LatestInvoices from '~/components/dashboard/latest-invoices';
 import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '~/components/skeletons';
 
 export default function DashboardPage() {
-  console.log("Dashboard index rendering");
   return (
     <main>
       <h1 class="font-lusitana mb-4 text-xl md:text-2xl">

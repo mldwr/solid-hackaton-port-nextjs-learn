@@ -23,7 +23,7 @@ export default function LoginForm() {
     try {
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
-      console.log(`xxxx ${email}:${password}:${formData}`);
+      
       const result = await authenticate(`${email}:${password}`, formData);
       
       if (result instanceof Response) {
