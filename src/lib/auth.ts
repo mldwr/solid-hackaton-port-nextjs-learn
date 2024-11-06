@@ -32,6 +32,7 @@ export async function signIn(credentials: { email: string; password: string }) {
       if (!foundUser) return null;
 
       const passwordsMatch = await bcrypt.compare(password, foundUser.password);
+      console.log('signIn passwordsMatch',passwordsMatch,foundUser);
       
       if (passwordsMatch) {
         setUser(foundUser);

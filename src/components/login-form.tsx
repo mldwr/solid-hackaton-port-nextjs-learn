@@ -18,6 +18,7 @@ export default function LoginForm() {
     event.preventDefault();
     setIsPending(true);
 
+    console.log('login form submit');
     const formData = new FormData(event.target as HTMLFormElement);
 
     try {
@@ -25,6 +26,7 @@ export default function LoginForm() {
       const password = formData.get('password') as string;
       
       const result = await authenticate(`${email}:${password}`, formData);
+      console.log('login form submit result',result);
       
       if (result instanceof Response) {
         navigate('/dashboard');
