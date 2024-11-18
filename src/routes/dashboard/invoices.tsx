@@ -7,6 +7,7 @@ import { CreateInvoice } from '~/components/invoices/buttons';
 import '~/styles/fonts.css';
 import { InvoicesTableSkeleton } from '~/components/skeletons';
 import { fetchInvoicesPages } from '~/lib/data';
+import { createMemo } from 'solid-js';
 
 export function routeData() {
   return {
@@ -17,12 +18,12 @@ export function routeData() {
 export default function InvoicesPage() {
   const [searchParams] = useSearchParams();
   
-  // Ensure query is a string
-  const query = Array.isArray(searchParams.query) 
-    ? searchParams.query[0] || '' 
-    : searchParams.query || '';
+  const query = createMemo(() => {
+    const q = Array.isArray(searchParams.query) ? searchParams.query[0] || '' : searchParams.query || '';
+    return q;
+  });
     
-  const currentPage = Number(searchParams.page) || 1;
+  const currentPage = createMemo(() => Number(searchParams.page) || 1);
 
   const [totalPages] = createResource(query, fetchInvoicesPages);
 
@@ -36,7 +37,7 @@ export default function InvoicesPage() {
         <CreateInvoice />
       </div>
       <Suspense fallback={<InvoicesTableSkeleton />}>
-        <Table query={query} currentPage={currentPage} />
+        <Table query={query()} currentPage={currentPage()} />
       </Suspense>
       <div class="mt-5 flex w-full justify-center">
         <Pagination totalPages={totalPages() ?? 0} />
