@@ -83,6 +83,8 @@ export async function fetchFilteredInvoices(
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
+  console.log('fetchFilteredInvoices called', query, currentPage, offset)
+
   try {
     const invoices = await sql<InvoicesTable>`
       SELECT
@@ -105,6 +107,7 @@ export async function fetchFilteredInvoices(
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
+    console.log('invoices result', invoices.rowCount);
     return invoices.rows;
   } catch (error) {
     console.error('Database Error:', error);
